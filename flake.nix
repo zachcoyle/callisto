@@ -1,5 +1,5 @@
 {
-  description = "hey nix... wyd?";
+  description = "Καλλιστώ 😵‍💫";
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -70,12 +70,12 @@
 
           cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
-          nix-wyd = craneLib.buildPackage (commonArgs // { inherit cargoArtifacts; });
+          callisto = craneLib.buildPackage (commonArgs // { inherit cargoArtifacts; });
         in
         {
           packages =
             {
-              default = nix-wyd;
+              default = callisto;
             }
             // pkgs.lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
               my-crate-llvm-coverage = craneLibLLvmTools.cargoLlvmCov (commonArgs // { inherit cargoArtifacts; });
@@ -96,14 +96,14 @@
           checks = {
 
             # Build the crate as part of `nix flake check` for convenience
-            inherit nix-wyd;
+            inherit callisto;
             # Run clippy (and deny all warnings) on the crate source,
             # again, reusing the dependency artifacts from above.
             #
             # Note that this is done as a separate derivation so that
             # we can block the CI if there are issues here, but not
             # prevent downstream consumers from building our crate by itself.
-            nix-wyd-clippy = craneLib.cargoClippy (
+            callisto-clippy = craneLib.cargoClippy (
               commonArgs
               // {
                 inherit cargoArtifacts;
@@ -111,19 +111,19 @@
               }
             );
 
-            nix-wyd-doc = craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
+            callisto-doc = craneLib.cargoDoc (commonArgs // { inherit cargoArtifacts; });
 
-            nix-wyd-fmt = craneLib.cargoFmt { inherit src; };
+            callisto-fmt = craneLib.cargoFmt { inherit src; };
 
-            nix-wyd-audit = craneLib.cargoAudit { inherit src advisory-db; };
+            callisto-audit = craneLib.cargoAudit { inherit src advisory-db; };
 
             # Audit licenses
-            nix-wyd-deny = craneLib.cargoDeny { inherit src; };
+            callisto-deny = craneLib.cargoDeny { inherit src; };
 
             # Run tests with cargo-nextest
-            # Consider setting `doCheck = false` on `nix-wyd` if you do not want
+            # Consider setting `doCheck = false` on `callisto` if you do not want
             # the tests to run twice
-            nix-wyd-nextest = craneLib.cargoNextest (
+            callisto-nextest = craneLib.cargoNextest (
               commonArgs
               // {
                 inherit cargoArtifacts;
